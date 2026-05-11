@@ -1,5 +1,6 @@
 <x-layout>
     <form method="post" action="/ideas">
+        @csrf <!-- CSRF-Token damit ich einen Post request machen kann -->
         <div class="col-span-full">
             <label for="idea" class="block text-sm/6 font-medium text-white">New Idea</label>
             <div class="mt-2">

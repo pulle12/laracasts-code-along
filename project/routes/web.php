@@ -6,5 +6,6 @@ Route::get('/', function () {
     return view('ideas');
 });
 Route::post('/ideas', function () {
-    dd('Hello!');
+    dd(request()->all());
+    // stehengeblieben bei Video "Forms" 11:15
 });
