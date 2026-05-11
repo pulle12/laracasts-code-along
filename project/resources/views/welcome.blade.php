@@ -6,4 +6,7 @@
     @if (count($tasks))
         <p>Yes, we have some tasks. How many? <?= count($tasks) ?> tasks, in fact!</p>
     @endif
+    @foreach($tasks as $task)
+        <li>{{ $task }}</li>
+    @endforeach
 </x-layout>
