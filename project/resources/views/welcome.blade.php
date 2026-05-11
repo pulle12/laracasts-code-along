@@ -6,7 +6,9 @@
     @if (count($tasks))
         <p>Yes, we have some tasks. How many? <?= count($tasks) ?> tasks, in fact!</p>
     @endif
-    @foreach($tasks as $task)
+    @forelse($tasks as $task)
         <li>{{ $task }}</li>
-    @endforeach
+    @empty
+        <p>No tasks for today!</p>
+    @endforelse
 </x-layout>
