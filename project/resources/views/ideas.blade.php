@@ -13,4 +13,16 @@
             <button type="submit" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">Save</button>
         </div>
     </form>
+
+    @if (count($ideas))
+    <div class="mt-6 text-white">
+        <h2 class="font-bold">Your Ideas</h2>
+
+        <ul class="mt-6">
+            @foreach($ideas as $idea)
+                <li class="text-sm">{{ $idea }}</li>
+            @endforeach
+        </ul>
+    </div>
+        @endif
 </x-layout>

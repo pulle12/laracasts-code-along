@@ -1,11 +1,26 @@
 <?php
 
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('ideas');
+    $ideas = session()->get('ideas', []);
+
+    return view('ideas', [
+        'ideas' => $ideas
+    ]);
 });
 Route::post('/ideas', function () {
-    dd(request()->all());
-    // stehengeblieben bei Video "Forms" 11:15
+    $idea = request("idea");
+
+    session()->push("ideas", $idea);
+
+    return redirect("/");
+});
+
+// Temporary
+Route::get('/delete-ideas', function () {
+    session()->forget("ideas");
+
+    return redirect("/");
 });
