@@ -4,10 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Idea;
 
 Route::get('/', function () {
-    $idea = Idea::find(1);
-    // Stop bei Databases Video minute 17:30 (Video 8)
+    $ideas = Idea::query()
+        ->when(request('state'), function ($query, $state) {
+           $query->where('state', $state);
+        })
+        ->get();
 
-    return $idea;
     return view('ideas', [
         'ideas' => $ideas
     ]);
@@ -15,7 +17,10 @@ Route::get('/', function () {
 Route::post('/ideas', function () {
     $idea = request("idea");
 
-    session()->push("ideas", $idea);
+    Idea::create([
+        'description' => request("idea"),
+        'state' => "pending",
+    ]);
 
     return redirect("/");
 });
