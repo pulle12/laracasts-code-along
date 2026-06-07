@@ -3,31 +3,53 @@
 use Illuminate\Support\Facades\Route;
 use App\Models\Idea;
 
-Route::get('/', function () {
-    $ideas = Idea::query()
-        ->when(request('state'), function ($query, $state) {
-           $query->where('state', $state);
-        })
-        ->get();
+# view alle
+Route::get('/ideas', function () {
+    $ideas = Idea::all();
 
-    return view('ideas', [
+    return view('ideas.index', [
         'ideas' => $ideas
     ]);
 });
+
+# view für eines
+Route::get('/ideas/{idea}', function (Idea $idea) { # in diesem Parameter ist ein Null Check (404) enthalten
+    return view('ideas.show', [
+        'idea' => $idea
+    ]);
+});
+
+# eines ändern
+Route::get('/ideas/{idea}/edit', function (Idea $idea) {
+    return view('ideas.edit', [
+        'idea' => $idea
+    ]);
+});
+
+# wird intern aufgerufen um zu persistieren von der edit blade aus
+Route::patch('/ideas/{idea}', function (Idea $idea) {
+    $idea->update([
+        'description' => request('description')
+    ]);
+
+    return redirect('/ideas/' . $idea->id);
+});
+
+# eines erzeugen
 Route::post('/ideas', function () {
     $idea = request("idea");
 
     Idea::create([
-        'description' => request("idea"),
+        'description' => request("description"),
         'state' => "pending",
     ]);
 
-    return redirect("/");
+    return redirect("/ideas");
 });
 
-// Temporary
-Route::get('/delete-ideas', function () {
-    session()->forget("ideas");
+# löschen
+Route::delete('/ideas/{idea}', function (Idea $idea) {
+    $idea->delete();
 
-    return redirect("/");
+    return redirect('/ideas');
 });
