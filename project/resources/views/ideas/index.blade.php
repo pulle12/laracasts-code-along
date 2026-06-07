@@ -5,7 +5,7 @@
 
         <ul class="mt-6">
             @foreach($ideas as $idea)
-                <a href="/ideas/{{ $idea->id }}" class="text-sm">{{ $idea->description }}</a><br/>
+                <a href="/ideas/{{ $idea->id }}/edit" class="text-sm">{{ $idea->description }}</a><br/>
             @endforeach
         </ul>
     </div>

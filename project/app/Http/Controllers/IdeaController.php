@@ -32,6 +32,10 @@ class IdeaController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([ # redirected automatisch zurück auf die seite mit dem eingabefeld wenn description leer war
+            'description' => ['required', 'min:10'],
+        ]);
+
         Idea::create([
             'description' => request("description"),
             'state' => "pending",
