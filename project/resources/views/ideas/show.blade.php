@@ -1,5 +1,5 @@
 <x-layout>
-    <div class="mt-6 text-white">
+    <div class="card bg-neutral p-6 mt-6 text-white">
         <h2 class="font-bold"><a href="/ideas">Your Ideas</a></h2>
 
         <div class="mt-6">
