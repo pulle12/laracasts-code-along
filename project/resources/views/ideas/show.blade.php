@@ -1,6 +1,6 @@
 <x-layout>
     <div class="card bg-neutral p-6 mt-6 text-white">
-        <h2 class="font-bold"><a href="/ideas">Your Ideas</a></h2>
+        <h2 class="font-bold"><a href="/ideas">Your Idea</a></h2>
 
         <div class="mt-6">
             {{ $idea->description }}

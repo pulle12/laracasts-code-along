@@ -23,21 +23,20 @@ class SessionsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string', Password::default()],
         ]);
 
-        if(Auth::attempt($validated)) {
+        if (Auth::attempt($validated)) {
             $request->session()->regenerate();
-            return redirect('/ideas')->with('success', 'You are now logged in');
+
+            return redirect('/ideas');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+            'email' => 'Die eingegebenen Anmeldedaten stimmen nicht mit unseren Datensätzen überein.',
+        ])->onlyInput('email');
     }
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -46,6 +45,6 @@ class SessionsController extends Controller
     {
         Auth::logout();
 
-        return redirect('/ideas');
+        return redirect('/login');
     }
 }

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IdeaRequest;
 use App\Models\Idea;
-use Illuminate\Http\Request;
+use App\Notifications\IdeaPublished;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class IdeaController extends Controller
 {
@@ -14,12 +15,8 @@ class IdeaController extends Controller
      */
     public function index()
     {
-        $ideas = Idea::query()->where([
-            ['user_id', '=', Auth::id()],
-        ])->get();
-
         return view('ideas.index', [
-            'ideas' => $ideas
+            'ideas' => Auth::user()->ideas()->get(),
         ]);
     }
 
@@ -34,24 +31,26 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(IdeaRequest $request) # in diesem Parameter ist eine Validierung (ausgelagert in StoreIdeaRequest) enthalten
+    public function store(IdeaRequest $request)
     {
-        Idea::create([
-            'description' => request("description"),
-            'state' => "pending",
-            'user_id' => Auth::user()
+        $idea = Auth::user()->ideas()->create([
+            'description' => $request->input('description'),
+            'state' => 'pending',
         ]);
 
-        return redirect("/ideas");
+        Auth::user() -> notify(new IdeaPublished($idea));
+        return redirect('/ideas');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Idea $idea) # in diesem Parameter ist ein Null Check (404) enthalten
+    public function show(Idea $idea)
     {
+        Gate::authorize('update', $idea);
+
         return view('ideas.show', [
-            'idea' => $idea
+            'idea' => $idea,
         ]);
     }
 
@@ -60,8 +59,10 @@ class IdeaController extends Controller
      */
     public function edit(Idea $idea)
     {
+        Gate::authorize('update', $idea);
+
         return view('ideas.edit', [
-            'idea' => $idea
+            'idea' => $idea,
         ]);
     }
 
@@ -70,7 +71,13 @@ class IdeaController extends Controller
      */
     public function update(IdeaRequest $request, Idea $idea)
     {
-        return redirect('/ideas/' . $idea->id); # im video wird concatenation verwendet
+        Gate::authorize('update', $idea);
+
+        $idea->update([
+            'description' => $request->input('idea'),
+        ]);
+
+        return redirect('/ideas/'.$idea->id);
     }
 
     /**
@@ -78,6 +85,8 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
+        Gate::authorize('update', $idea);
+
         $idea->delete();
 
         return redirect('/ideas');

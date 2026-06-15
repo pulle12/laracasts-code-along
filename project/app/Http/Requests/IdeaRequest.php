@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Idea;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IdeaRequest extends FormRequest
@@ -19,19 +17,20 @@ class IdeaRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'description' => ['required', 'min:10'],
+            'description' => 'required|string|min:3',
         ];
     }
 
-    public function messages(): array {
+    public function messages(): array
+    {
         return [
-            'description.required' => 'Die Beschreibung ist erforderlich.',
-            'description.min' => 'Die Beschreibung muss mindestens :min Zeichen lang sein.',
+            'idea.required' => 'You must provide an idea.',
+            'idea.min' => 'Sure your idea is good, but it must be at least :min characters long.',
         ];
     }
 }
